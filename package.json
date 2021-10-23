@@ -7,6 +7,7 @@
     "start": "node dist/main.js",
     "dev": "nodemon main",
     "build": "npm run tsc",
+    "postinstall": "npm run tsc",
     "webpack:dev": "webpack -w --mode development --config webpack.dev.js",
     "webpack:prod": "webpack -w --mode production --config webpack.prod.js",
     "db:migrate:dev": "npx sequelize-cli --env development db:migrate",
