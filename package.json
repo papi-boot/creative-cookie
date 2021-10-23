@@ -4,7 +4,6 @@
   "description": "",
   "main": "dist",
   "scripts": {
-    "start": "node build/main",
     "dev": "nodemon main",
     "dev:build": "nodemon main",
     "postinstall": "tsc 'tsconfig.json'",
