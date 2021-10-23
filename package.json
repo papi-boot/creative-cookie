@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon main",
     "dev:build": "nodemon main",
-    "postinstall": "tsc 'tsconfig.json'",
+    "postinstall": "tsc",
     "webpack:dev": "webpack -w --mode development --config webpack.dev.js",
     "webpack:prod": "webpack -w --mode production --config webpack.prod.js",
     "db:migrate:dev": "npx sequelize-cli --env development db:migrate",
