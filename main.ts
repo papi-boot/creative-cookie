@@ -3,6 +3,7 @@ import path from "path";
 dotenv.config({ path: path.join(__dirname, ".env") }).parsed;
 import { ServerHelper } from "./helper/server.helper";
 import { Routes } from "./routes/routes";
+import { DatabaseHelper } from "./helper/database.helper";
 
 export class Main extends ServerHelper {
   private PORT = process.env.PORT || 3030;
@@ -13,15 +14,17 @@ export class Main extends ServerHelper {
     try {
       this.app.listen(this.PORT, () => {
         console.log(`SERVER START AT http://locahost:${this.PORT}`);
-      })
+      });
     } catch (err) {
-      console.error()
+      console.error();
     }
   }
 }
 const main = new Main();
 const routes = new Routes();
+const dbHelper = new DatabaseHelper();
 main.startMiddleWare();
 main.startRoute(routes.GET_REQUEST());
+main.startRoute(routes.POST_REQUEST());
 main.startListen();
-
+dbHelper.startDatabase();

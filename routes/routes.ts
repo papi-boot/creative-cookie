@@ -12,6 +12,10 @@ export class Routes {
   }
   public POST_REQUEST(): any {
     // @TODO: ALL HTTP POST ROUTE
+    this.routes.post(
+      new LoginController().ROUTE_PATH,
+      new LoginController().getLoginForm
+    )
     return this.routes;
   }
   public PUT_REQUEST(): any {

@@ -16,14 +16,14 @@ export class ServerHelper {
   private SECRET_KEY: any = process.env.SECRET_KEY;
 
   public startMiddleWare(): void {
+    this.app.use(express.json());
     this.app.use(
       cors({
         credentials: true,
         origin: "*",
       })
     );
-    this.app.use(express.static(path.join(__dirname, "public")));
-    this.app.use(express.json());
+    this.app.use(express.static("public"));
     this.app.set("view engine", "ejs");
     this.app.use(express.urlencoded({ extended: false }));
     this.app.use(morgan("dev"));
@@ -34,5 +34,8 @@ export class ServerHelper {
         resave: true,
       })
     );
+    this.app.use(flash());
+    this.app.use(passport.initialize());
+    this.app.use(passport.session());
   }
 }
