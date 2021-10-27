@@ -1,3 +1,4 @@
+"use strict";
 const { DataTypes } = require("sequelize");
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -7,25 +8,25 @@ module.exports = {
       await queryInterface.createTable("users", {
         user_id: {
           allowNull: false,
+          unique: true,
           primaryKey: true,
-          defaultValue: Sequelize.literal("uuid_generate_v4()"),
           type: DataTypes.UUID,
-          onUpdate: "CASCADE",
+          defaultValue: Sequelize.literal("uuid_generate_v4()"),
           onDelete: "CASCADE",
+          onUpdate: "CASCADE",
         },
         user_full_name: {
+          type: DataTypes.STRING(200),
           allowNull: false,
-          type: DataTypes.TEXT,
         },
         user_email: {
+          type: DataTypes.STRING(200),
           allowNull: false,
           unique: true,
-          type: DataTypes.STRING(100),
         },
         user_password: {
-          allowNull: false,
-          unique: true,
           type: DataTypes.TEXT,
+          allowNull: false,
         },
         user_created_at: {
           allowNull: false,

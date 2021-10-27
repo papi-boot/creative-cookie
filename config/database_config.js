@@ -10,13 +10,19 @@ module.exports = {
     dialect: DATABASE_DIALECT,
   },
   production: {
-    use_env_variable: "DATABASE_URL",
+    // use_env_variable: "DATABASE_URL",
     username: process.env.PG_DEV_USERNAME,
     password: process.env.PG_DEV_PASSWORD,
     host: process.env.PG_DEV_HOST,
     database: process.env.PG_DEV_DATABASE,
     port: process.env.PG_DEV_PORT,
     dialect: DATABASE_DIALECT,
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
+    },
     logging: false,
   },
 };
