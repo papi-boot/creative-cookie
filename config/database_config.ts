@@ -9,5 +9,14 @@ module.exports = {
     port: process.env.PG_PORT,
     dialect: DATABASE_DIALECT,
   },
-  production: {},
+  production: {
+    use_env_variable: "DATABASE_URL",
+    username: process.env.PG_DEV_USERNAME,
+    password: process.env.PG_DEV_PASSWORD,
+    host: process.env.PG_DEV_HOST,
+    database: process.env.PG_DEV_DATABASE,
+    port: process.env.PG_DEV_PORT,
+    dialect: DATABASE_DIALECT,
+    logging: false,
+  },
 };

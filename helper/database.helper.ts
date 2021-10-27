@@ -21,12 +21,6 @@ export class DatabaseHelper {
       this.connectionString = process.env.DATABASE_URL;
       this.connectionOption = {
         dialect: this.dialect,
-        dialectOptions: {
-          ssl: {
-            require: true,
-            rejectUnathorized: false,
-          },
-        },
         logging: false,
       };
     } else {
