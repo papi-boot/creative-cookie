@@ -1,4 +1,4 @@
-import { Sequelize, QueryTypes } from "sequelize";
+import { Sequelize, QueryTypes, QueryInterface } from "sequelize";
 interface ConnectionOption {
   dialect: string;
   dialectOptions: object | undefined;
@@ -9,8 +9,8 @@ interface ReturnOption {
   qt?: any;
 }
 export class DatabaseHelper {
-  private connectionString: any = "";
-  private connectionOption: ConnectionOption | any = {
+  public connectionString: any = "";
+  public connectionOption: ConnectionOption | any = {
     dialect: "",
     dialectOptions: undefined,
     logging: false,
@@ -49,6 +49,7 @@ export class DatabaseHelper {
       .catch((err) => {
         console.error(err);
       });
+
     return { db: sequelize, qt: QueryTypes };
   }
 }

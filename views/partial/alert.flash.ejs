@@ -1,0 +1,14 @@
+<% if(messages.success) { %>
+  <div class="alert alert-success my-3" role="alert">
+    <h6 class="m-0 fw-bold text-center">
+      <span><i class="bi bi-check-circle-fill"></i></span>&nbsp;<%= messages.success %>
+    </h6>
+  </div>
+<% } %>
+<% if(messages.error) { %>
+  <div class="alert alert-danger my-3" role="alert">
+    <h6 class="m-0 fw-bold text-center">
+      <span><i class="bi bi-exclamation-circle-fill"></i></span>&nbsp;<%= messages.error %>
+    </h6>
+  </div>
+<% } %>

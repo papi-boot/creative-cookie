@@ -78,6 +78,8 @@
 
 /*! ./component-script/services/login.service */
 
+/*! ./component-script/services/register.service */
+
 /*! ./computeOffsets.js */
 
 /*! ./computeStyles.js */
@@ -358,6 +360,10 @@
 
 /*!**************************************************************!*\
   !*** ./node_modules/@popperjs/core/lib/utils/mergeByName.js ***!
+  \**************************************************************/
+
+/*!**************************************************************!*\
+  !*** ./public/component-script/services/register.service.ts ***!
   \**************************************************************/
 
 /*!***************************************************************!*\

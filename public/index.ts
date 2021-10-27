@@ -8,3 +8,4 @@ import "./bootstrap/font/bootstrap-icons.css";
 // -- ALL Typescript/Javascript Files
 import "./bootstrap/js/bootstrap.min";
 import "./component-script/services/login.service";
+import "./component-script/services/register.service";

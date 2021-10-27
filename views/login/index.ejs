@@ -8,7 +8,8 @@
   <body class="body-color">
     <div class="container">
       <div class="std-height d-flex align-items-center justify-content-center">
-        <form class="form-card form-login p-4 login-form">
+        <form class="form-card form-login p-4 login-form" method="POST" action="<%= paths.self_path %> ">
+          <%- include("../partial/alert.flash.ejs") %> 
           <h3 class="text-center my-4 fw-bold">Sign in</h3>
           <div class="form-floating mb-3">
             <input name="email" type="email" class="form-control fw-bold text-primary login-email" id="email"
@@ -24,11 +25,14 @@
             <div class="form-text ft-password"></div>
           </div>
           <div class="d-flex align-items-center justify-content-end">
-            <button class="btn btn-primary btn-md fw-bold is-hover login-btn" disabled type="submit">Sign in <span><i
+            <button class="btn btn-primary btn-md fw-bold is-hover login-btn"type="submit">Sign in <span><i
                   class="bi bi-arrow-right-circle"></i>
                 <%- include("../partial/spinner.load.ejs", { size: "spinner-grow-sm", className: "spinner-login-btn" }) %>
               </span>
             </button>
+          </div>
+          <div class="d-flex align-items-center justify-content-center my-3">
+            <span>Don't have an account? <span class="fw-bold"><a href="<%= paths.register_path %> ">Join here.</a></span></span>
           </div>
         </form>
       </div>

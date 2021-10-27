@@ -1,32 +1,52 @@
 import express from "express";
+import { AuthenticateController } from "../controller/authenticate/authenticate.controller";
 import { LoginController } from "../controller/login/login.controller";
+import { RegisterController } from "../controller/register/register.controller";
 export class Routes {
   public routes: express.Router = express.Router();
+  private loginController: LoginController = new LoginController();
+  private registerController: RegisterController = new RegisterController();
+  private authenticateController: AuthenticateController =
+    new AuthenticateController();
+
+  // @TODO: ALL HTTP GET ROUTE
   public GET_REQUEST(): any {
-    // @TODO: ALL HTTP GET ROUTE
     this.routes.get(
-      new LoginController().ROUTE_PATH,
-      new LoginController().userLogin
+      this.authenticateController.AUTHENTICATE_ROUTE,
+      this.authenticateController.checkAuthenticate
+    );
+    this.routes.get(
+      this.loginController.LOGIN_PATH,
+      this.loginController.getLoginPage
+    );
+    this.routes.get(
+      this.registerController.REGISTER_PATH,
+      this.registerController.getRegisterForm
     );
     return this.routes;
   }
+
+  // @TODO: ALL HTTP POST ROUTE
   public POST_REQUEST(): any {
-    // @TODO: ALL HTTP POST ROUTE
     this.routes.post(
-      new LoginController().ROUTE_PATH,
-      new LoginController().getLoginForm
-    )
+      this.registerController.REGISTER_PATH,
+      this.registerController.postRegisterAccount
+    );
+    this.routes.post(
+      this.loginController.LOGIN_PATH,
+      this.loginController.postLogin
+    );
     return this.routes;
   }
+
+  // @TODO: ALL HTTP POST ROUTE
   public PUT_REQUEST(): any {
-    // @TODO: ALL HTTP POST ROUTE
     return this.routes;
   }
+  
+  // @TODO: ALL HTTP POST ROUTE
   public DELETE_REQUEST(): any {
-    // @TODO: ALL HTTP POST ROUTE
     return this.routes;
   }
-  public NOT_FOUND(): any{
-    
-  }
+  public NOT_FOUND(): any {}
 }
