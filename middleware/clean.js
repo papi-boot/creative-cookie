@@ -1,9 +1,9 @@
 import { JSDOM } from "jsdom";
 import DomPurify from "dompurify";
 export class Clean {
-  public async cleanNow(s: string): Promise<string> {
+  async cleanNow(string) {
     const htmlPurify = DomPurify(new JSDOM().window);
-    const cleanInstance = htmlPurify.sanitize(s);
+    const cleanInstance = htmlPurify.sanitize(string);
     return cleanInstance;
   }
 }
