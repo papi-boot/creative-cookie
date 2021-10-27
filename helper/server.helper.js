@@ -45,7 +45,7 @@ export class ServerHelper {
     this.app.use(
       cors({
         credentials: true,
-        origin: ["http://localhost:3000", "https://www.creative-cookie.studio.com"],
+        origin: ["http://localhost:3000", "https://www.creative-cookie.studio"],
       })
     );
     this.app.use(express.static("public"));
