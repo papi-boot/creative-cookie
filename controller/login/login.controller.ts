@@ -47,12 +47,17 @@ export class LoginController extends DatabaseHelper {
           checkUser[0].user_password,
           (err, isMatched) => {
             if (err) {
-              req.flash("error", err.message);
-              return res.redirect(this.LOGIN_PATH);
+              return res.status(401).json({
+                message: "Something went wrong wrong",
+                success: false,
+                isAuthenticated: false,
+                user: null
+              });
             }
             if (isMatched) {
               req.session.user = checkUser[0];
               req.session.cookie.maxAge = 360 * 60 * 60 * 1000;
+              res.cookie("connect.sid", req.session);
               return res.status(200).json({
                 message: "Login Successfully",
                 success: true,

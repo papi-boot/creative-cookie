@@ -49,6 +49,16 @@ export class ServerHelper {
           process.env.NODE_ENV === "production"
             ? "https://www.creative-cookie.studio"
             : "http://localhost:3000",
+        allowedHeaders: [
+          "Access-Control-Allow-Credentials",
+          "Content-Type",
+          "Access-Control-Allow-Headers",
+          "Origin",
+          "X-Requested-With",
+          "Content-Type, Accept",
+          "Set-Cookie"
+        ],
+
       })
     );
     this.app.use(express.static("public"));
@@ -56,6 +66,7 @@ export class ServerHelper {
     this.app.use(cookieParser());
     this.app.use(express.urlencoded({ extended: false }));
     this.app.use(morgan("dev"));
+    this.app.set("trust proxy", 1);
     this.app.use(
       session({
         store: new SequelizeStore({
