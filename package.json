@@ -59,6 +59,7 @@
     "@types/mini-css-extract-plugin": "^2.4.0",
     "@types/morgan": "^1.9.3",
     "@types/passport": "^1.0.7",
+    "@types/passport-local": "^1.0.34",
     "autoprefixer": "^10.3.7",
     "babel-loader": "^8.2.3",
     "css-loader": "^6.4.0",

@@ -1,4 +1,5 @@
 import express from "express";
+import passport from "passport";
 import { AuthenticateController } from "../controller/authenticate/authenticate.controller";
 import { LoginController } from "../controller/login/login.controller";
 import { RegisterController } from "../controller/register/register.controller";
@@ -13,7 +14,7 @@ export class Routes {
   public GET_REQUEST(): any {
     this.routes.get(
       this.authenticateController.AUTHENTICATE_ROUTE,
-      this.authenticateController.checkAuthenticate
+      this.authenticateController.checkAuthenticated
     );
     this.routes.get(
       this.loginController.LOGIN_PATH,
@@ -34,7 +35,40 @@ export class Routes {
     );
     this.routes.post(
       this.loginController.LOGIN_PATH,
-      this.loginController.postLogin
+      (req: express.Request, res: express.Response) => {
+        console.log(req.body);
+        passport.authenticate("local", (err, user, info) => {
+          if (err) {
+            throw err;
+          }
+
+          if (user) {
+            req.logIn(user, (err) => {
+              if (err) {
+                throw err;
+              }
+              req.session.cookie.maxAge = 360 * 60 * 60 * 1000;
+              req.session.save();
+              return res.status(200).json({
+                message: "Successfully Logged in",
+                success: true,
+                isAuthenticated: true,
+                user: user,
+                path: "/dashboard",
+              });
+            });
+          } else {
+            return res.status(401).json({
+              message: "Email or Password is incorrect",
+              success: false,
+              isAuthenticated: false,
+              user: null,
+              path: "/authencate",
+            });
+          }
+          console.log(info);
+        })(req, res);
+      }
     );
     return this.routes;
   }
@@ -43,7 +77,7 @@ export class Routes {
   public PUT_REQUEST(): any {
     return this.routes;
   }
-  
+
   // @TODO: ALL HTTP POST ROUTE
   public DELETE_REQUEST(): any {
     return this.routes;

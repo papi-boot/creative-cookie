@@ -50,7 +50,7 @@ export class ServerHelper {
     );
     this.app.use(express.static("public"));
     this.app.set("view engine", "ejs");
-    this.app.use(cookieParser());
+    this.app.use(cookieParser(process.env.SECRET_KEY));
     this.app.use(express.urlencoded({ extended: false }));
     this.app.use(morgan("dev"));
     this.app.use(
