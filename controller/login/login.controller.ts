@@ -91,6 +91,8 @@ export class LoginController extends DatabaseHelper {
           if (err) {
             throw err;
           }
+          req.session.cookie.sameSite = "none";
+          req.session.cookie.secure = true;
           req.session.cookie.maxAge = 360 * 60 * 60 * 1000;
           return res.status(200).json({
             message: "Successfully Logged in",
