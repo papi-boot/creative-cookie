@@ -61,6 +61,11 @@ export class ServerHelper {
         secret: this.SECRET_KEY,
         saveUninitialized: false,
         resave: true,
+        cookie: {
+          maxAge: 360 * 60 * 60 * 1000,
+          sameSite: false,
+          domain: "https://www.creative-cookie.studio",
+        },
       })
     );
     sequelize.sync();
