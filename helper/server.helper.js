@@ -47,8 +47,8 @@ export class ServerHelper {
         credentials: true,
         origin:
           process.env.NODE_ENV === "production"
-            ? "http://localhost:3000"
-            : "https://www.creative-cookie.studio",
+            ? "https://www.creative-cookie.studio"
+            : "http://localhost:3000",
       })
     );
     this.app.use(express.static("public"));
