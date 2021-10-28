@@ -1,5 +1,4 @@
 import express from "express";
-import passport from "passport";
 import { AuthenticateController } from "../controller/authenticate/authenticate.controller";
 import { LoginController } from "../controller/login/login.controller";
 import { RegisterController } from "../controller/register/register.controller";
@@ -35,39 +34,7 @@ export class Routes {
     );
     this.routes.post(
       this.loginController.LOGIN_PATH,
-      (req: express.Request, res: express.Response) => {
-        console.log(req.body);
-        passport.authenticate("local", (err, user, info) => {
-          if (err) {
-            throw err;
-          }
-
-          if (user) {
-            req.logIn(user, (err) => {
-              if (err) {
-                throw err;
-              }
-              req.session.cookie.maxAge = 360 * 60 * 60 * 1000;
-              return res.status(200).json({
-                message: "Successfully Logged in",
-                success: true,
-                isAuthenticated: true,
-                user: user,
-                path: "/dashboard",
-              });
-            });
-          } else {
-            return res.status(401).json({
-              message: "Email or Password is incorrect",
-              success: false,
-              isAuthenticated: false,
-              user: null,
-              path: "/authencate",
-            });
-          }
-          console.log(info);
-        })(req, res);
-      }
+      this.loginController.postLogin
     );
     return this.routes;
   }

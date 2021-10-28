@@ -6,6 +6,7 @@ import { UserModel } from "../../db/models/user";
 import passport from "passport";
 import bcrypt from "bcryptjs";
 import express from "express";
+import jwt from "jsonwebtoken";
 import { Strategy } from "passport-local";
 export class LoginController extends DatabaseHelper {
   public LOGIN_PATH: string = "/login";
@@ -79,4 +80,36 @@ export class LoginController extends DatabaseHelper {
       console.error(err);
     }
   }
+  public postLogin = (req: express.Request, res: express.Response) => {
+    console.log(req.body);
+    passport.authenticate("local", (err, user: UserModel, info) => {
+      if (err) {
+        throw err;
+      }
+      if (user) {
+        req.logIn(user, (err) => {
+          if (err) {
+            throw err;
+          }
+          req.session.cookie.maxAge = 360 * 60 * 60 * 1000;
+          return res.status(200).json({
+            message: "Successfully Logged in",
+            success: true,
+            isAuthenticated: true,
+            user: user,
+            path: "/dashboard",
+          });
+        });
+      } else {
+        return res.status(401).json({
+          message: "Email or Password is incorrect",
+          success: false,
+          isAuthenticated: false,
+          user: null,
+          path: "/authencate",
+        });
+      }
+      console.log(info);
+    })(req, res);
+  };
 }

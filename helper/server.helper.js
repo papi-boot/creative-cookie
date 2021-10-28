@@ -63,7 +63,8 @@ export class ServerHelper {
         resave: false,
         cookie: {
           maxAge: 360 * 60 * 60 * 1000,
-          sameSite: "none",
+          sameSite: process.env.NODE_ENV === "production" ? "none" : false,
+          secure: process.env.NODE_ENV === "production" ? true : false,
         },
       })
     );
