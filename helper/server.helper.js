@@ -45,7 +45,7 @@ export class ServerHelper {
     this.app.use(
       cors({
         credentials: true,
-        origin: ["http://localhost:3000", "https://www.creative-cookie.studio"],
+        origin: ["http://localhost:3000", "https://www.creative-cookie.studio", "https://creative-cookie.herokuapp.com"],
       })
     );
     this.app.use(express.static("public"));
@@ -63,8 +63,9 @@ export class ServerHelper {
         resave: false,
         cookie: {
           maxAge: 360 * 60 * 60 * 1000,
-          sameSite: process.env.NODE_ENV === "production" ? "none" : false,
-          secure: process.env.NODE_ENV === "production" ? true : false,
+          sameSite: "none",
+          secure: true,
+
         },
       })
     );
