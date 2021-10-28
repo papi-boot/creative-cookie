@@ -6,6 +6,7 @@ export class AuthenticateController {
     res: express.Response,
   ): Promise<any> => {
     try {
+      console.log(req.user);
       if (req.isAuthenticated()) {
         return res.status(200).json({
           message: "Welcome Back",

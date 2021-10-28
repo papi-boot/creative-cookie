@@ -48,7 +48,6 @@ export class Routes {
                 throw err;
               }
               req.session.cookie.maxAge = 360 * 60 * 60 * 1000;
-              req.session.save();
               return res.status(200).json({
                 message: "Successfully Logged in",
                 success: true,

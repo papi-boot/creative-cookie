@@ -59,12 +59,11 @@ export class ServerHelper {
           db: sequelize,
         }),
         secret: this.SECRET_KEY,
-        saveUninitialized: false,
-        resave: true,
+        saveUninitialized: true,
+        resave: false,
         cookie: {
           maxAge: 360 * 60 * 60 * 1000,
-          sameSite: false,
-          domain: "https://www.creative-cookie.studio",
+          sameSite: "none",
         },
       })
     );
