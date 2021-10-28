@@ -45,7 +45,11 @@ export class ServerHelper {
     this.app.use(
       cors({
         credentials: true,
-        origin: ["http://localhost:3000", "https://www.creative-cookie.studio", "https://creative-cookie.herokuapp.com"],
+        origin: [
+          "http://localhost:3000",
+          "https://www.creative-cookie.studio",
+          "https://creative-cookie.herokuapp.com",
+        ],
       })
     );
     this.app.use(express.static("public"));
@@ -63,9 +67,8 @@ export class ServerHelper {
         resave: false,
         cookie: {
           maxAge: 360 * 60 * 60 * 1000,
-          sameSite: "none",
-          secure: true,
-
+          sameSite: process.env.NODE_ENV === "production" ? "none" : false,
+          secure: process.env.NODE_ENV === "production" ? true : "auto",
         },
       })
     );
@@ -73,5 +76,14 @@ export class ServerHelper {
     this.app.use(flash());
     this.app.use(passport.initialize());
     this.app.use(passport.session());
+    this.app.use((req, res, next) => {
+      res.header("Content-Type", "application/json;charset=UTF-8");
+      res.header("Access-Control-Allow-Credentials", true);
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept"
+      );
+      next();
+    });
   }
 }
