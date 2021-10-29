@@ -23,6 +23,10 @@ export class Routes {
       this.registerController.REGISTER_PATH,
       this.registerController.getRegisterForm
     );
+    this.routes.get(
+      this.authenticateController.LOGOUT_ROUTE,
+      this.authenticateController.logOutUser
+    )
     return this.routes;
   }
 

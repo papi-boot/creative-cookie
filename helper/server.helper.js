@@ -56,7 +56,8 @@ export class ServerHelper {
           "Origin",
           "X-Requested-With",
           "Content-Type, Accept",
-          "Set-Cookie"
+          "Set-Cookie",
+          "Cookie"
         ],
 
       })
@@ -79,6 +80,7 @@ export class ServerHelper {
           sameSite: process.env.NODE_ENV === "production" ? "none" : true,
           secure: process.env.NODE_ENV === "production" ? true : "auto",
         },
+        proxy: true
       })
     );
     sequelize.sync();

@@ -7,7 +7,7 @@ import { DatabaseHelper } from "./helper/database.helper";
 import { UserModel } from "./db/models/user";
 declare module "express-session" {
   interface SessionData {
-    user?: UserModel;
+    user?: UserModel | null;
   }
 }
 export class Main extends ServerHelper {
