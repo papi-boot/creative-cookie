@@ -1,0 +1,8 @@
+@use "root" as root;
+.is-hover{
+  transition: root.$transition-1 !important;
+
+  &:hover {
+    transform: translateX(.5rem);
+  }
+}

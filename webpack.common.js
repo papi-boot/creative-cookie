@@ -1,25 +1,12 @@
-import path from "path";
-import MiniCSSExtractPlugin from "mini-css-extract-plugin";
-import TerserPlugin from "terser-webpack-plugin";
-let webpackCommon: {
-  entry: object;
-  performance: boolean;
-  devtool: any;
-  output: object;
-  optimization: object;
-  module: object;
-  plugins: object;
-  mode: any,
-  devServer: object,
-};
-export default webpackCommon = {
+const path = require("path");
+const MiniCSSExtractPlugin = require("mini-css-extract-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
+
+module.exports = {
   entry: {
-    main: path.join(__dirname, "public", "index.js"),
+    main: path.join(__dirname, "public", "index.ts"),
   },
   performance: false,
-  devtool: "",
-  mode: "",
-  devServer: {},
   output: {
     path: path.join(__dirname, "public/dist"),
     filename: "[name].bundle.js",
@@ -31,11 +18,14 @@ export default webpackCommon = {
   module: {
     rules: [
       {
-        test: /\.(js|ts)$/i,
+        test: /\.(ts|tsx)$/i,
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-        },
+        use: ["ts-loader"],
+      },
+      {
+        test: /\.(js)$/i,
+        exclude: /node_modules/,
+        use: ["babel-loader"],
       },
       {
         test: /\.(css|scss)$/i,
@@ -53,6 +43,9 @@ export default webpackCommon = {
         use: ["file-loader"],
       },
     ],
+  },
+  resolve: {
+    extensions: [".tsx", ".ts", ".js"],
   },
   plugins: [new MiniCSSExtractPlugin({ filename: "[name].css" })],
 };
