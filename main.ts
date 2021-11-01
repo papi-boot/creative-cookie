@@ -4,7 +4,7 @@ dotenv.config({ path: path.join(__dirname, ".env") }).parsed;
 import { ServerHelper } from "./helper/server.helper";
 import { Routes } from "./routes/routes";
 import { DatabaseHelper } from "./helper/database.helper";
-import { UserModel } from "./db/models/user";
+import { UserModel } from "./model/user";
 declare module "express-session" {
   interface SessionData {
     user?: UserModel | null;
@@ -31,5 +31,7 @@ const dbHelper = new DatabaseHelper();
 main.startMiddleWare();
 main.startRoute(routes.GET_REQUEST());
 main.startRoute(routes.POST_REQUEST());
+main.startRoute(routes.PUT_REQUEST());
+main.startRoute(routes.DELETE_REQUEST());
 main.startListen();
 dbHelper.startDatabase().db.sync();

@@ -2,7 +2,7 @@ import { LoginInterface } from "../interface/interface";
 import { DatabaseHelper } from "../../helper/database.helper";
 import { QueryTypes } from "sequelize";
 import { Clean } from "../../middleware/clean";
-import { UserModel } from "../../db/models/user";
+import { UserModel } from "../../model/user";
 import bcrypt from "bcryptjs";
 import express from "express";
 export class LoginController extends DatabaseHelper {

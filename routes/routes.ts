@@ -1,6 +1,7 @@
 import express from "express";
 import { AuthenticateController } from "../controller/authenticate/authenticate.controller";
 import { LoginController } from "../controller/login/login.controller";
+import { PostController } from "../controller/post/post.controller";
 import { RegisterController } from "../controller/register/register.controller";
 export class Routes {
   public routes: express.Router = express.Router();
@@ -8,6 +9,7 @@ export class Routes {
   private registerController: RegisterController = new RegisterController();
   private authenticateController: AuthenticateController =
     new AuthenticateController();
+  private postController: PostController = new PostController();
 
   // @TODO: ALL HTTP GET ROUTE
   public GET_REQUEST(): any {
@@ -26,7 +28,11 @@ export class Routes {
     this.routes.get(
       this.authenticateController.LOGOUT_ROUTE,
       this.authenticateController.logOutUser
-    )
+    );
+    this.routes.get(
+      this.postController.POST_ROUTE,
+      this.postController.readPost
+    );
     return this.routes;
   }
 
@@ -40,16 +46,28 @@ export class Routes {
       this.loginController.LOGIN_PATH,
       this.loginController.postLogin
     );
+    this.routes.post(
+      this.postController.POST_ROUTE,
+      this.postController.createPost
+    );
     return this.routes;
   }
 
   // @TODO: ALL HTTP POST ROUTE
   public PUT_REQUEST(): any {
+    this.routes.put(
+      this.postController.POST_ROUTE,
+      this.postController.updatePost
+    );
     return this.routes;
   }
-  
+
   // @TODO: ALL HTTP POST ROUTE
   public DELETE_REQUEST(): any {
+    this.routes.delete(
+      this.postController.POST_ROUTE,
+      this.postController.deletePost
+    );
     return this.routes;
   }
   public NOT_FOUND(): any {}
