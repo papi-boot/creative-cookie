@@ -53,13 +53,15 @@ export class ServerHelper {
           "Access-Control-Allow-Credentials",
           "Content-Type",
           "Access-Control-Allow-Headers",
+          "Access-Control-Request-Headers",
           "Origin",
           "X-Requested-With",
-          "Content-Type, Accept",
+          "Content-Type",
+          "Accept",
           "Set-Cookie",
-          "Cookie"
+          "Cookie",
+          "post-list",
         ],
-
       })
     );
     this.app.use(express.static("public"));
@@ -80,7 +82,7 @@ export class ServerHelper {
           sameSite: process.env.NODE_ENV === "production" ? "none" : true,
           secure: process.env.NODE_ENV === "production" ? true : "auto",
         },
-        proxy: true
+        proxy: true,
       })
     );
     sequelize.sync();

@@ -55,10 +55,19 @@ export class PostController extends DatabaseHelper {
   public readPost = async (req: express.Request, res: express.Response) => {
     try {
       if (req.session.user) {
-        const results: Array<PostModel> = await this.startDatabase().db.query(
-          "SELECT * FROM posts INNER JOIN users ON posts.post_created_by = users.user_id ORDER BY post_created_at DESC",
+        console.log(req.header("post-list"));
+        const postLimit = req.header("post-list");
+        const postItemResult = await this.startDatabase().db.query(
+          "SELECT COUNT(*) FROM posts INNER JOIN users ON posts.post_created_by = users.user_id",
           {
             type: QueryTypes.SELECT,
+          }
+        );
+        const results: Array<PostModel> = await this.startDatabase().db.query(
+          "SELECT * FROM posts INNER JOIN users ON posts.post_created_by = users.user_id ORDER BY post_created_at DESC LIMIT $1",
+          {
+            type: QueryTypes.SELECT,
+            bind: [postLimit],
           }
         );
         if (results.length > 0) {
@@ -66,6 +75,7 @@ export class PostController extends DatabaseHelper {
             message: "Post successfully fetched",
             success: true,
             post: results,
+            post_item: postItemResult
           });
         } else {
           return res
@@ -124,6 +134,7 @@ export class PostController extends DatabaseHelper {
           return res.status(404).json({
             message:
               "The post was not found. It's either deleted or check your network to refresh all content",
+            success: false,
           });
         }
       } else {

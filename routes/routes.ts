@@ -1,6 +1,8 @@
 import express from "express";
+import cors from "cors";
 import { AuthenticateController } from "../controller/authenticate/authenticate.controller";
 import { LoginController } from "../controller/login/login.controller";
+import { LikeController } from "../controller/post/like.controller";
 import { PostController } from "../controller/post/post.controller";
 import { RegisterController } from "../controller/register/register.controller";
 export class Routes {
@@ -10,6 +12,7 @@ export class Routes {
   private authenticateController: AuthenticateController =
     new AuthenticateController();
   private postController: PostController = new PostController();
+  private likeController: LikeController = new LikeController();
 
   // @TODO: ALL HTTP GET ROUTE
   public GET_REQUEST(): any {
@@ -29,6 +32,7 @@ export class Routes {
       this.authenticateController.LOGOUT_ROUTE,
       this.authenticateController.logOutUser
     );
+    this.routes.options(this.postController.POST_ROUTE);
     this.routes.get(
       this.postController.POST_ROUTE,
       this.postController.readPost
@@ -49,6 +53,10 @@ export class Routes {
     this.routes.post(
       this.postController.POST_ROUTE,
       this.postController.createPost
+    );
+    this.routes.post(
+      this.likeController.LIKE_ROUTE,
+      this.likeController.likePost
     );
     return this.routes;
   }
