@@ -51,9 +51,10 @@ export class ServerHelper {
             : "http://localhost:3000",
         allowedHeaders: [
           "Access-Control-Allow-Credentials",
-          "Content-Type",
           "Access-Control-Allow-Headers",
           "Access-Control-Request-Headers",
+          "Access-Control-Allow-Origin",
+          "Content-Type",
           "Origin",
           "X-Requested-With",
           "Content-Type",
