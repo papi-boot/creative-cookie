@@ -32,7 +32,7 @@ export class Routes {
       this.authenticateController.LOGOUT_ROUTE,
       this.authenticateController.logOutUser
     );
-    this.routes.options(this.postController.POST_ROUTE);
+    // this.routes.options(this.postController.POST_ROUTE);
     this.routes.get(
       this.postController.POST_ROUTE,
       this.postController.readPost
