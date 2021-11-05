@@ -2,6 +2,7 @@ import { DatabaseHelper } from "../../helper/database.helper";
 import { Clean } from "../../middleware/clean";
 import { QueryTypes } from "sequelize";
 import { PostModel } from "../../model/post";
+import { PostLikeRecord } from "../../model/post-like-records";
 import express from "express";
 export class PostController extends DatabaseHelper {
   public POST_ROUTE: string = "/post";
@@ -70,12 +71,21 @@ export class PostController extends DatabaseHelper {
             bind: [postLimit],
           }
         );
+        const getPostLike: Array<PostLikeRecord> = await this.startDatabase().db.query(
+          "SELECT * FROM post_like_records INNER JOIN users ON post_like_records.plr_user_ref = users.user_id INNER JOIN posts ON post_like_records.plr_post_ref = posts.post_id",
+          {
+            type: QueryTypes.SELECT,
+          }
+        );
         if (results.length > 0) {
+          // @TODO: get corresponding likes
+
           return res.status(200).json({
             message: "Post successfully fetched",
             success: true,
             post: results,
-            post_item: postItemResult
+            post_item: postItemResult,
+            post_like: getPostLike,
           });
         } else {
           return res
