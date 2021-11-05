@@ -71,12 +71,13 @@ export class PostController extends DatabaseHelper {
             bind: [postLimit],
           }
         );
-        const getPostLike: Array<PostLikeRecord> = await this.startDatabase().db.query(
-          "SELECT * FROM post_like_records INNER JOIN users ON post_like_records.plr_user_ref = users.user_id INNER JOIN posts ON post_like_records.plr_post_ref = posts.post_id",
-          {
-            type: QueryTypes.SELECT,
-          }
-        );
+        const getPostLike: Array<PostLikeRecord> =
+          await this.startDatabase().db.query(
+            "SELECT * FROM post_like_records INNER JOIN users ON post_like_records.plr_user_ref = users.user_id INNER JOIN posts ON post_like_records.plr_post_ref = posts.post_id",
+            {
+              type: QueryTypes.SELECT,
+            }
+          );
         if (results.length > 0) {
           // @TODO: get corresponding likes
 
