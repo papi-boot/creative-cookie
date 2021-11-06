@@ -1,11 +1,11 @@
+import { databaseHelper } from "../../helper/database.helper";
 import { LoginInterface } from "../interface/interface";
-import { DatabaseHelper } from "../../helper/database.helper";
-import { QueryTypes } from "sequelize";
 import { Clean } from "../../middleware/clean";
 import { UserModel } from "../../model/user";
+import { QueryTypes } from "sequelize";
 import bcrypt from "bcryptjs";
 import express from "express";
-export class LoginController extends DatabaseHelper {
+export class LoginController {
   public LOGIN_PATH: string = "/login";
   private c: Clean = new Clean();
   private loginOptions: LoginInterface = {
@@ -32,7 +32,7 @@ export class LoginController extends DatabaseHelper {
       const { email, password } = req.body;
 
       // @TODO: Check if email is existing
-      const checkUser: Array<UserModel> = await this.startDatabase().db.query(
+      const checkUser: Array<UserModel> = await databaseHelper.db.query(
         "SELECT * FROM users WHERE user_email = $1",
         {
           type: QueryTypes.SELECT,
@@ -51,7 +51,7 @@ export class LoginController extends DatabaseHelper {
                 message: "Something went wrong wrong",
                 success: false,
                 isAuthenticated: false,
-                user: null
+                user: null,
               });
             }
             if (isMatched) {
@@ -61,7 +61,7 @@ export class LoginController extends DatabaseHelper {
                 message: "Login Successfully",
                 success: true,
                 isAuthenticated: true,
-                user: checkUser[0]
+                user: checkUser[0],
               });
             } else {
               return res.status(401).json({
