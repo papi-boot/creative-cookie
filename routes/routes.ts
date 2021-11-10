@@ -5,6 +5,7 @@ import { LoginController } from "../controller/login/login.controller";
 import { LikeController } from "../controller/post/like.controller";
 import { PostController } from "../controller/post/post.controller";
 import { RegisterController } from "../controller/register/register.controller";
+import { CommentController } from "../controller/comment/comment.controller";
 export class Routes {
   public routes: express.Router = express.Router();
   private loginController: LoginController = new LoginController();
@@ -13,6 +14,7 @@ export class Routes {
     new AuthenticateController();
   private postController: PostController = new PostController();
   private likeController: LikeController = new LikeController();
+  private commentController: CommentController = new CommentController();
 
   // @TODO: ALL HTTP GET ROUTE
   public GET_REQUEST(): any {
@@ -58,6 +60,10 @@ export class Routes {
       this.likeController.LIKE_ROUTE,
       this.likeController.likePost
     );
+    this.routes.post(
+      this.commentController.COMMENT_ROUTE,
+      this.commentController.createComment
+    )
     return this.routes;
   }
 

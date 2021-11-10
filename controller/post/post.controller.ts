@@ -4,6 +4,7 @@ import { QueryTypes } from "sequelize";
 import { PostModel } from "../../model/post";
 import { PostLikeRecord } from "../../model/post-like-records";
 import express from "express";
+import { CommentModel } from "../../model/comment";
 export class PostController {
   public POST_ROUTE: string = "/post";
   private c: Clean = new Clean();
@@ -78,6 +79,13 @@ export class PostController {
               type: QueryTypes.SELECT,
             }
           );
+        const getCommentPost: Array<CommentModel> =
+          await databaseHelper.db.query(
+            "SELECT * FROM comments INNER JOIN users ON comments.comment_user_ref = users.user_id INNER JOIN posts ON comments.comment_post_ref = posts.post_id ORDER BY comment_created_at DESC",
+            {
+              type: QueryTypes.SELECT,
+            }
+          );
         if (results.length > 0) {
           // @TODO: get corresponding likes
 
@@ -87,6 +95,7 @@ export class PostController {
             post: results,
             post_item: postItemResult,
             post_like: getPostLike,
+            post_comment: getCommentPost,
           });
         } else {
           return res

@@ -1,6 +1,5 @@
 import { databaseHelper } from "../../helper/database.helper";
 import { QueryTypes } from "sequelize";
-import { Clean } from "../../middleware/clean";
 import { PostModel } from "../../model/post";
 import { PostLikeRecord } from "../../model/post-like-records";
 import express from "express";
