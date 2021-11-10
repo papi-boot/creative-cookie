@@ -1,9 +1,11 @@
-import { DatabaseHelper } from "../../helper/database.helper";
+import { databaseHelper } from "../../helper/database.helper";
 import { Clean } from "../../middleware/clean";
 import { QueryTypes } from "sequelize";
 import { PostModel } from "../../model/post";
+import { PostLikeRecord } from "../../model/post-like-records";
 import express from "express";
-export class PostController extends DatabaseHelper {
+import { CommentModel } from "../../model/comment";
+export class PostController {
   public POST_ROUTE: string = "/post";
   private c: Clean = new Clean();
   public createPost = async (req: express.Request, res: express.Response) => {
@@ -16,7 +18,7 @@ export class PostController extends DatabaseHelper {
           const cleanPostTag = await this.c.cleanContent(
             JSON.stringify(post_tag)
           );
-          const results = await this.startDatabase().db.query(
+          const results = await databaseHelper.db.query(
             "INSERT INTO posts(post_created_by, post_content, post_tag, post_created_at, post_updated_at)VALUES($1, $2, $3, $4, $5)RETURNING *",
             {
               type: QueryTypes.INSERT,
@@ -55,17 +57,45 @@ export class PostController extends DatabaseHelper {
   public readPost = async (req: express.Request, res: express.Response) => {
     try {
       if (req.session.user) {
-        const results: Array<PostModel> = await this.startDatabase().db.query(
-          "SELECT * FROM posts INNER JOIN users ON posts.post_created_by = users.user_id ORDER BY post_created_at DESC",
+        console.log(req.header("post-list"));
+        const postLimit = req.header("post-list");
+        const postItemResult = await databaseHelper.db.query(
+          "SELECT COUNT(*) FROM posts INNER JOIN users ON posts.post_created_by = users.user_id",
           {
             type: QueryTypes.SELECT,
           }
         );
+        const results: Array<PostModel> = await databaseHelper.db.query(
+          "SELECT * FROM posts INNER JOIN users ON posts.post_created_by = users.user_id ORDER BY post_created_at DESC LIMIT $1",
+          {
+            type: QueryTypes.SELECT,
+            bind: [postLimit],
+          }
+        );
+        const getPostLike: Array<PostLikeRecord> =
+          await databaseHelper.db.query(
+            "SELECT * FROM post_like_records INNER JOIN users ON post_like_records.plr_user_ref = users.user_id INNER JOIN posts ON post_like_records.plr_post_ref = posts.post_id",
+            {
+              type: QueryTypes.SELECT,
+            }
+          );
+        const getCommentPost: Array<CommentModel> =
+          await databaseHelper.db.query(
+            "SELECT * FROM comments INNER JOIN users ON comments.comment_user_ref = users.user_id INNER JOIN posts ON comments.comment_post_ref = posts.post_id ORDER BY comment_created_at DESC",
+            {
+              type: QueryTypes.SELECT,
+            }
+          );
         if (results.length > 0) {
+          // @TODO: get corresponding likes
+
           return res.status(200).json({
             message: "Post successfully fetched",
             success: true,
             post: results,
+            post_item: postItemResult,
+            post_like: getPostLike,
+            post_comment: getCommentPost,
           });
         } else {
           return res
@@ -84,7 +114,7 @@ export class PostController extends DatabaseHelper {
       if (req.session.user) {
         const { post_content, post_tag, post_id } = req.body;
         // First check the post if exist
-        const checkPost: Array<PostModel> = await this.startDatabase().db.query(
+        const checkPost: Array<PostModel> = await databaseHelper.db.query(
           "SELECT * FROM posts WHERE post_id = $1",
           {
             type: QueryTypes.SELECT,
@@ -98,7 +128,7 @@ export class PostController extends DatabaseHelper {
             const cleanPostTag = await this.c.cleanContent(
               JSON.stringify(post_tag)
             );
-            const results = await this.startDatabase().db.query(
+            const results = await databaseHelper.db.query(
               "UPDATE posts SET post_content = $1, post_tag = $2, post_updated_at = $3 WHERE post_id = $4 RETURNING *",
               {
                 type: QueryTypes.UPDATE,
@@ -124,6 +154,7 @@ export class PostController extends DatabaseHelper {
           return res.status(404).json({
             message:
               "The post was not found. It's either deleted or check your network to refresh all content",
+            success: false,
           });
         }
       } else {
@@ -143,7 +174,7 @@ export class PostController extends DatabaseHelper {
       if (req.session.user) {
         const { post_id } = req.body;
         // @TODO: Check if post is existing
-        const checkPost: Array<PostModel> = await this.startDatabase().db.query(
+        const checkPost: Array<PostModel> = await databaseHelper.db.query(
           "SELECT * FROM posts WHERE post_id = $1",
           {
             type: QueryTypes.SELECT,
@@ -152,7 +183,7 @@ export class PostController extends DatabaseHelper {
         );
         if (checkPost.length > 0) {
           // @TODO: delete post;
-          const results = await this.startDatabase().db.query(
+          const results = await databaseHelper.db.query(
             "DELETE FROM posts WHERE post_id = $1 RETURNING *",
             {
               type: QueryTypes.DELETE,

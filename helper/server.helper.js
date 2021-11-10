@@ -51,15 +51,18 @@ export class ServerHelper {
             : "http://localhost:3000",
         allowedHeaders: [
           "Access-Control-Allow-Credentials",
-          "Content-Type",
           "Access-Control-Allow-Headers",
+          "Access-Control-Request-Headers",
+          "Access-Control-Allow-Origin",
+          "Content-Type",
           "Origin",
           "X-Requested-With",
-          "Content-Type, Accept",
+          "Content-Type",
+          "Accept",
           "Set-Cookie",
-          "Cookie"
+          "Cookie",
+          "post-list",
         ],
-
       })
     );
     this.app.use(express.static("public"));
@@ -80,21 +83,12 @@ export class ServerHelper {
           sameSite: process.env.NODE_ENV === "production" ? "none" : true,
           secure: process.env.NODE_ENV === "production" ? true : "auto",
         },
-        proxy: true
+        proxy: true,
       })
     );
     sequelize.sync();
     this.app.use(flash());
     this.app.use(passport.initialize());
     this.app.use(passport.session());
-    this.app.use((req, res, next) => {
-      res.header("Content-Type", "application/json;charset=UTF-8");
-      res.header("Access-Control-Allow-Credentials", true);
-      res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept"
-      );
-      next();
-    });
   }
 }

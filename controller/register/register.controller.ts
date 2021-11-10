@@ -1,10 +1,10 @@
+import { databaseHelper } from "../../helper/database.helper";
 import { RegisterInterface } from "../interface/interface";
-import { DatabaseHelper } from "../../helper/database.helper";
 import { QueryTypes } from "sequelize";
 import { Clean } from "../../middleware/clean";
 import bcrypt from "bcryptjs";
 import express from "express";
-export class RegisterController extends DatabaseHelper {
+export class RegisterController {
   public REGISTER_PATH: string = "/register";
   private c: Clean = new Clean();
   private registerOption: RegisterInterface = {
@@ -65,7 +65,7 @@ export class RegisterController extends DatabaseHelper {
       }
 
       // @TODO: Register the Account Now Check if the email is already exist on database
-      const checkEmail = await this.startDatabase().db.query(
+      const checkEmail = await databaseHelper.db.query(
         "SELECT * FROM users WHERE user_email = $1",
         {
           type: QueryTypes.SELECT,
@@ -83,7 +83,7 @@ export class RegisterController extends DatabaseHelper {
         const cleanFullName = await this.c.cleanNow(fullname);
         const cleanEmail = await this.c.cleanNow(email);
 
-        const insertUser: [any][any] = await this.startDatabase().db.query(
+        const insertUser: [any][any] = await databaseHelper.db.query(
           "INSERT INTO users(user_full_name, user_email, user_password, user_created_at, user_updated_at)VALUES($1, $2, $3, $4, $5) RETURNING *",
           {
             type: QueryTypes.INSERT,

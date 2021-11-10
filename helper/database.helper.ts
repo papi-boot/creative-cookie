@@ -1,55 +1,48 @@
-import { Sequelize, QueryTypes, QueryInterface } from "sequelize";
-interface ConnectionOption {
-  dialect: string;
-  dialectOptions: object | undefined;
-  logging: boolean;
-}
-interface ReturnOption {
+import {
+  Sequelize,
+  QueryTypes,
+  DataTypes,
+  QueryOptionsWithType,
+} from "sequelize";
+interface DatabaseHelperInterFace {
   db: Sequelize;
-  qt?: any;
 }
-export class DatabaseHelper {
-  public connectionString: any = "";
-  public connectionOption: ConnectionOption | any = {
-    dialect: "",
-    dialectOptions: undefined,
+let connectionStringOption = {};
+let connectionString;
+const isProduction = process.env.NODE_ENV === "production";
+
+//Check if we are on production mode or development mode
+if (isProduction) {
+  connectionString = process.env.DATABASE_URL;
+  connectionStringOption = {
+    dialect: "postgres",
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
+    },
     logging: false,
   };
-  private dialect = "postgres";
-  public startDatabase(): ReturnOption {
-    if (process.env.NODE_ENV === "production") {
-      this.connectionString = process.env.DATABASE_URL;
-      this.connectionOption = {
-        dialect: this.dialect,
-        dialectOptions: {
-          ssl: {
-            require: true,
-            rejectUnauthorized: false,
-          },
-        },
-        logging: false,
-      };
-    } else {
-      this.connectionString = process.env.DATABASE_URL;
-      this.connectionOption = {
-        dialect: this.dialect,
-        dialectOptions: undefined,
-        logging: false,
-      };
-    }
-    const sequelize = new Sequelize(
-      this.connectionString,
-      this.connectionOption
-    );
-    sequelize
-      .authenticate()
-      .then(() => {
-        console.log("CONNECTED TO DATABASE");
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-
-    return { db: sequelize, qt: QueryTypes };
-  }
+} else {
+  connectionString = process.env.DATABASE_URL;
+  connectionStringOption = {
+    dialect: "postgres",
+    logging: false,
+  };
 }
+console.log(connectionStringOption);
+
+const sequelize = new Sequelize(connectionString!, connectionStringOption);
+
+try {
+  sequelize
+    .authenticate()
+    .then(() => console.log("Connected to Database"))
+    .catch((err) => console.error(err));
+} catch (err) {
+  console.error(err);
+}
+export const databaseHelper: DatabaseHelperInterFace = {
+  db: sequelize,
+};
