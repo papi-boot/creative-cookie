@@ -80,6 +80,7 @@ export class ServerHelper {
         this.sl.socketListen("delete post", socket, this.io);
         this.sl.socketListen("like post", socket, this.io);
         this.sl.socketListen("add comment", socket, this.io);
+        this.sl.socketListen("edit comment", socket, this.io);
         this.sl.socketListen("delete comment", socket, this.io);
       }
       socket.on("disconnect", () => {
