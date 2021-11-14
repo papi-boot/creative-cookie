@@ -8,7 +8,7 @@ export class AuthenticateController {
   ) => {
     try {
       if (req.session.user) {
-        console.log(req.session);
+        // console.log(req.session);
         const { user_full_name } = req.session.user;
         return res.status(200).json({
           message: `Welcome Back ${user_full_name}`,

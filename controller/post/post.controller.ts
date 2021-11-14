@@ -32,7 +32,7 @@ export class PostController {
             }
           );
           results;
-          console.log(results);
+          // console.log(results);
           return res.status(200).json({
             message: "Your post was successfully published.",
             success: true,

@@ -55,6 +55,7 @@ export class LoginController {
               });
             }
             if (isMatched) {
+              
               req.session.user = checkUser[0];
               req.session.cookie.maxAge = 360 * 60 * 60 * 1000;
               return res.status(200).json({
