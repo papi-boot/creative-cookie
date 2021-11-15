@@ -4,9 +4,15 @@ dotenv.config({ path: path.join(__dirname, ".env") }).parsed;
 import { ServerHelper } from "./helper/server.helper";
 import { Routes } from "./routes/routes";
 import { UserModel } from "./model/user";
+import express from "express";
 declare module "express-session" {
   interface SessionData {
     user?: UserModel | null;
+  }
+}
+declare module "socket.io" {
+  interface request {
+    session: object;
   }
 }
 export class Main extends ServerHelper {
@@ -16,8 +22,8 @@ export class Main extends ServerHelper {
   }
   public startListen(): void {
     try {
-      this.app.listen(this.PORT, () => {
-        console.log(`SERVER START AT http://locahost:${this.PORT}`);
+      this.httpServer.listen(this.PORT, () => {
+        console.log(`Server starts at PORT: ${this.PORT}`);
       });
     } catch (err) {
       console.error();
