@@ -14,6 +14,7 @@ export class CommentController {
       if (req.session.user) {
         // TODO: Check if post is exisiting
         const { post_id, comment_content } = req.body;
+        console.log(req.body);
         const { user_id } = req.session.user;
         const checkPost: Array<PostModel> = await databaseHelper.db.query("SELECT * FROM posts WHERE post_id = $1", {
           type: QueryTypes.SELECT,

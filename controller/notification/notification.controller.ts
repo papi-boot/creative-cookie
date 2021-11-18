@@ -64,4 +64,37 @@ export class NotificationController {
       return res.status(400).json({ message: "Something went wrong. Please try again or later", success: false });
     }
   };
+
+  public updateNotification = async (req: express.Request, res: express.Response): Promise<any> => {
+    try {
+      if (req.session.user) {
+        const { notif_id } = req.body;
+        const { user_id } = req.session.user;
+        // @TODO: check notif id if exist;
+        const checkNotif: Array<NotificationModel> = await databaseHelper.db.query("SELECT * FROM notifications WHERE notif_id = $1", {
+          type: QueryTypes.SELECT,
+          bind: [notif_id],
+        });
+        if (checkNotif.length > 0) {
+          const updateNotifStatus = await databaseHelper.db.query(
+            "UPDATE notifications SET notif_is_open = $1, notif_updated_at = $2 WHERE notif_id = $3",
+            {
+              type: QueryTypes.UPDATE,
+              bind: [true, new Date(), checkNotif[0].notif_id],
+            }
+          );
+          updateNotifStatus;
+          return res.status(200).json({ message: "Notification Seen", success: true });
+        } else {
+          return res
+            .status(404)
+            .json({ message: "The notification was not found. It's either deleted or removed by the admin", success: false });
+        }
+      } else {
+      }
+    } catch (err) {
+      console.error(err);
+      return res.status(400).json({ message: "Something went wrong. Please try again or later" });
+    }
+  };
 }

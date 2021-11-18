@@ -46,6 +46,7 @@ export class Routes {
   public PUT_REQUEST(): any {
     this.routes.put(this.postController.POST_ROUTE, this.postController.updatePost);
     this.routes.put(this.commentController.COMMENT_ROUTE, this.commentController.updateComment);
+    this.routes.put(this.notificationController.NOTIIFICATION_ROUTE, this.notificationController.updateNotification);
     return this.routes;
   }
 

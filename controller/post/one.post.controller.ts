@@ -26,14 +26,14 @@ export class OnePostController {
             }
           );
           const getPostLike: Array<PostLikeRecord> = await databaseHelper.db.query(
-            "SELECT * FROM post_like_records INNER JOIN users ON post_like_records.plr_user_ref = users.user_id WHERE plr_post_ref = $1",
+            "SELECT * FROM post_like_records INNER JOIN users ON post_like_records.plr_user_ref = users.user_id WHERE plr_post_ref = $1 ORDER BY plr_created_at DESC",
             {
               type: QueryTypes.SELECT,
               bind: [post_id],
             }
           );
           const getPostComment: Array<CommentModel> = await databaseHelper.db.query(
-            "SELECT * FROM comments INNER JOIN users ON comments.comment_user_ref = users.user_id WHERE comment_post_ref = $1",
+            "SELECT * FROM comments INNER JOIN users ON comments.comment_user_ref = users.user_id WHERE comment_post_ref = $1 ORDER BY comment_created_at DESC",
             {
               type: QueryTypes.SELECT,
               bind: [getOnePost[0].post_id],
