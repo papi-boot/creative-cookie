@@ -50,7 +50,7 @@ export class NotificationController {
     try {
       if (req.session.user) {
         const results: Array<NotificationModel> = await databaseHelper.db.query(
-          "SELECT * FROM notifications INNER JOIN users ON notifications.notif_user_ref = users.user_id INNER JOIN posts ON notifications.notif_post_ref = posts.post_id ORDER BY notif_created_at DESC",
+          "SELECT * FROM notifications INNER JOIN users ON notifications.notif_user_ref = users.user_id INNER JOIN posts ON notifications.notif_post_ref = posts.post_id LEFT JOIN profile_informations ON users.user_id = profile_informations.prof_info_user_ref ORDER BY notif_created_at DESC",
           {
             type: QueryTypes.SELECT,
           }

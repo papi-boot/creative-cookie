@@ -57,7 +57,7 @@ export class ServerHelper {
   sl = new SocketListener();
 
   startMiddleWare() {
-    this.app.use(express.json());
+    this.app.use(express.json({ limit: "50mb" }));
     this.app.use(cors(corsOptions));
     this.app.use(express.static("public"));
     this.app.set("view engine", "ejs");

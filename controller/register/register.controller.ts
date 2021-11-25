@@ -14,10 +14,7 @@ export class RegisterController {
       self_path: this.REGISTER_PATH,
     },
   };
-  public getRegisterForm = async (
-    req: express.Request,
-    res: express.Response
-  ): Promise<void> => {
+  public getRegisterForm = async (req: express.Request, res: express.Response): Promise<void> => {
     try {
       res.status(200).render("register/index", this.registerOption);
     } catch (err) {
@@ -25,32 +22,21 @@ export class RegisterController {
     }
   };
 
-  public postRegisterAccount = async (
-    req: express.Request,
-    res: express.Response
-  ): Promise<any> => {
+  public postRegisterAccount = async (req: express.Request, res: express.Response): Promise<any> => {
     try {
       const { fullname, email, password, confirm_password } = req.body;
       console.log(req.body);
       if (!fullname && !email && !password && !confirm_password) {
-        return res
-          .status(401)
-          .json({ message: "All field is required", success: false });
+        return res.status(401).json({ message: "All field is required", success: false });
       }
       if (!fullname) {
-        return res
-          .status(401)
-          .json({ message: "Full Name is required.", success: false });
+        return res.status(401).json({ message: "Full Name is required.", success: false });
       }
       if (!email) {
-        return res
-          .status(401)
-          .json({ message: "Email is required.", success: false });
+        return res.status(401).json({ message: "Email is required.", success: false });
       }
       if (!password) {
-        return res
-          .status(401)
-          .json({ message: "Password is required.", success: false });
+        return res.status(401).json({ message: "Password is required.", success: false });
       }
       if (password.length <= 6) {
         return res.status(401).json({
@@ -59,19 +45,14 @@ export class RegisterController {
         });
       }
       if (confirm_password !== password) {
-        return res
-          .status(401)
-          .json({ message: "Password do not matched", success: false });
+        return res.status(401).json({ message: "Password do not matched", success: false });
       }
 
       // @TODO: Register the Account Now Check if the email is already exist on database
-      const checkEmail = await databaseHelper.db.query(
-        "SELECT * FROM users WHERE user_email = $1",
-        {
-          type: QueryTypes.SELECT,
-          bind: [email],
-        }
-      );
+      const checkEmail = await databaseHelper.db.query("SELECT * FROM users WHERE user_email = $1", {
+        type: QueryTypes.SELECT,
+        bind: [email],
+      });
       if (checkEmail.length > 0) {
         return res.status(401).json({
           message: "The Email address is already exist",
@@ -87,13 +68,7 @@ export class RegisterController {
           "INSERT INTO users(user_full_name, user_email, user_password, user_created_at, user_updated_at)VALUES($1, $2, $3, $4, $5) RETURNING *",
           {
             type: QueryTypes.INSERT,
-            bind: [
-              cleanFullName,
-              cleanEmail,
-              hashPassword,
-              new Date(),
-              new Date(),
-            ],
+            bind: [cleanFullName, cleanEmail, hashPassword, new Date(), new Date()],
           }
         );
         console.log(insertUser);

@@ -15,20 +15,12 @@ export class PostController {
         // TODO: create new post, clean first the content for X-CROSS Script
         if (post_content) {
           const cleanPostContent = await this.c.cleanContent(post_content);
-          const cleanPostTag = await this.c.cleanContent(
-            JSON.stringify(post_tag)
-          );
+          const cleanPostTag = await this.c.cleanContent(JSON.stringify(post_tag));
           const results = await databaseHelper.db.query(
             "INSERT INTO posts(post_created_by, post_content, post_tag, post_created_at, post_updated_at)VALUES($1, $2, $3, $4, $5)RETURNING *",
             {
               type: QueryTypes.INSERT,
-              bind: [
-                req.session.user.user_id,
-                cleanPostContent,
-                post_tag ? cleanPostTag : null,
-                new Date(),
-                new Date(),
-              ],
+              bind: [req.session.user.user_id, cleanPostContent, post_tag ? cleanPostTag : null, new Date(), new Date()],
             }
           );
           results;
@@ -38,20 +30,14 @@ export class PostController {
             success: true,
           });
         } else {
-          return res
-            .status(400)
-            .json({ message: "Post should have a content.", success: false });
+          return res.status(400).json({ message: "Post should have a content.", success: false });
         }
       } else {
-        return res
-          .status(401)
-          .json({ message: "Not Authorized", success: false });
+        return res.status(401).json({ message: "Not Authorized", success: false });
       }
     } catch (err) {
       console.error(err);
-      return res
-        .status(400)
-        .json({ message: "Something went wrong. Please try again or later" });
+      return res.status(400).json({ message: "Something went wrong. Please try again or later" });
     }
   };
   public readPost = async (req: express.Request, res: express.Response) => {
@@ -66,26 +52,24 @@ export class PostController {
           }
         );
         const results: Array<PostModel> = await databaseHelper.db.query(
-          "SELECT * FROM posts INNER JOIN users ON posts.post_created_by = users.user_id ORDER BY post_created_at DESC LIMIT $1",
+          "SELECT * FROM posts INNER JOIN users ON posts.post_created_by = users.user_id LEFT JOIN profile_informations ON users.user_id = profile_informations.prof_info_user_ref ORDER BY post_created_at DESC LIMIT $1",
           {
             type: QueryTypes.SELECT,
             bind: [postLimit],
           }
         );
-        const getPostLike: Array<PostLikeRecord> =
-          await databaseHelper.db.query(
-            "SELECT * FROM post_like_records INNER JOIN users ON post_like_records.plr_user_ref = users.user_id INNER JOIN posts ON post_like_records.plr_post_ref = posts.post_id",
-            {
-              type: QueryTypes.SELECT,
-            }
-          );
-        const getCommentPost: Array<CommentModel> =
-          await databaseHelper.db.query(
-            "SELECT * FROM comments INNER JOIN users ON comments.comment_user_ref = users.user_id INNER JOIN posts ON comments.comment_post_ref = posts.post_id ORDER BY comment_created_at DESC",
-            {
-              type: QueryTypes.SELECT,
-            }
-          );
+        const getPostLike: Array<PostLikeRecord> = await databaseHelper.db.query(
+          "SELECT * FROM post_like_records INNER JOIN users ON post_like_records.plr_user_ref = users.user_id INNER JOIN posts ON post_like_records.plr_post_ref = posts.post_id LEFT JOIN profile_informations ON users.user_id = profile_informations.prof_info_user_ref ORDER BY plr_created_at DESC",
+          {
+            type: QueryTypes.SELECT,
+          }
+        );
+        const getCommentPost: Array<CommentModel> = await databaseHelper.db.query(
+          "SELECT * FROM comments INNER JOIN users ON comments.comment_user_ref = users.user_id INNER JOIN posts ON comments.comment_post_ref = posts.post_id LEFT JOIN profile_informations ON users.user_id = profile_informations.prof_info_user_ref ORDER BY comment_created_at DESC",
+          {
+            type: QueryTypes.SELECT,
+          }
+        );
         if (results.length > 0) {
           // @TODO: get corresponding likes
 
@@ -98,14 +82,10 @@ export class PostController {
             post_comment: getCommentPost,
           });
         } else {
-          return res
-            .status(200)
-            .json({ message: "No available post", success: false, post: null });
+          return res.status(200).json({ message: "No available post", success: false, post: null });
         }
       } else {
-        return res
-          .status(401)
-          .json({ message: "Not Authorized", success: false });
+        return res.status(401).json({ message: "Not Authorized", success: false });
       }
     } catch (err) {}
   };
@@ -114,30 +94,20 @@ export class PostController {
       if (req.session.user) {
         const { post_content, post_tag, post_id } = req.body;
         // First check the post if exist
-        const checkPost: Array<PostModel> = await databaseHelper.db.query(
-          "SELECT * FROM posts WHERE post_id = $1",
-          {
-            type: QueryTypes.SELECT,
-            bind: [post_id],
-          }
-        );
+        const checkPost: Array<PostModel> = await databaseHelper.db.query("SELECT * FROM posts WHERE post_id = $1", {
+          type: QueryTypes.SELECT,
+          bind: [post_id],
+        });
         if (checkPost.length > 0) {
           if (post_content) {
             // TODO: Update one post
             const cleanPostContent = await this.c.cleanContent(post_content);
-            const cleanPostTag = await this.c.cleanContent(
-              JSON.stringify(post_tag)
-            );
+            const cleanPostTag = await this.c.cleanContent(JSON.stringify(post_tag));
             const results = await databaseHelper.db.query(
               "UPDATE posts SET post_content = $1, post_tag = $2, post_updated_at = $3 WHERE post_id = $4 RETURNING *",
               {
                 type: QueryTypes.UPDATE,
-                bind: [
-                  cleanPostContent,
-                  post_tag ? cleanPostTag : null,
-                  new Date(),
-                  post_id,
-                ],
+                bind: [cleanPostContent, post_tag ? cleanPostTag : null, new Date(), post_id],
               }
             );
             console.log(results);
@@ -146,27 +116,20 @@ export class PostController {
               success: true,
             });
           } else {
-            return res
-              .status(400)
-              .json({ message: "Post should have a content.", success: false });
+            return res.status(400).json({ message: "Post should have a content.", success: false });
           }
         } else {
           return res.status(404).json({
-            message:
-              "The post was not found. It's either deleted or check your network to refresh all content",
+            message: "The post was not found. It's either deleted or check your network to refresh all content",
             success: false,
           });
         }
       } else {
-        return res
-          .status(401)
-          .json({ message: "Not Authorized", success: false });
+        return res.status(401).json({ message: "Not Authorized", success: false });
       }
     } catch (err) {
       console.error(err);
-      return res
-        .status(400)
-        .json({ message: "Something went wrong. Please try again or later" });
+      return res.status(400).json({ message: "Something went wrong. Please try again or later" });
     }
   };
   public deletePost = async (req: express.Request, res: express.Response) => {
@@ -174,36 +137,25 @@ export class PostController {
       if (req.session.user) {
         const { post_id } = req.body;
         // @TODO: Check if post is existing
-        const checkPost: Array<PostModel> = await databaseHelper.db.query(
-          "SELECT * FROM posts WHERE post_id = $1",
-          {
-            type: QueryTypes.SELECT,
-            bind: [post_id],
-          }
-        );
+        const checkPost: Array<PostModel> = await databaseHelper.db.query("SELECT * FROM posts WHERE post_id = $1", {
+          type: QueryTypes.SELECT,
+          bind: [post_id],
+        });
         if (checkPost.length > 0) {
           // @TODO: delete post;
-          const results = await databaseHelper.db.query(
-            "DELETE FROM posts WHERE post_id = $1 RETURNING *",
-            {
-              type: QueryTypes.DELETE,
-              bind: [post_id],
-            }
-          );
+          const results = await databaseHelper.db.query("DELETE FROM posts WHERE post_id = $1 RETURNING *", {
+            type: QueryTypes.DELETE,
+            bind: [post_id],
+          });
           console.log(results);
-          return res
-            .status(200)
-            .json({ message: "Post was successfully deleted", success: true });
+          return res.status(200).json({ message: "Post was successfully deleted", success: true });
         } else {
           return res.status(404).json({
-            message:
-              "The post was not found. It's either deleted or check your network to refresh all content",
+            message: "The post was not found. It's either deleted or check your network to refresh all content",
           });
         }
       } else {
-        return res
-          .status(401)
-          .json({ message: "Not Authorized", success: false });
+        return res.status(401).json({ message: "Not Authorized", success: false });
       }
     } catch (err) {
       console.error(err);
