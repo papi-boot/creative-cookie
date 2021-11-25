@@ -8,6 +8,8 @@ import { RegisterController } from "../controller/register/register.controller";
 import { CommentController } from "../controller/comment/comment.controller";
 import { NotificationController } from "../controller/notification/notification.controller";
 import { OnePostController } from "../controller/post/one.post.controller";
+import { ProfileController } from "../controller/profile/profile.controller";
+import { UploadController } from "../controller/upload/upload.controller";
 export class Routes {
   public routes: express.Router = express.Router();
   private loginController: LoginController = new LoginController();
@@ -18,6 +20,8 @@ export class Routes {
   private commentController: CommentController = new CommentController();
   private notificationController: NotificationController = new NotificationController();
   private onePostController: OnePostController = new OnePostController();
+  private uploadController: UploadController = new UploadController();
+  private profileController: ProfileController = new ProfileController();
 
   // @TODO: ALL HTTP GET ROUTE
   public GET_REQUEST(): any {
@@ -39,6 +43,9 @@ export class Routes {
     this.routes.post(this.likeController.LIKE_ROUTE, this.likeController.createLikePost);
     this.routes.post(this.commentController.COMMENT_ROUTE, this.commentController.createComment);
     this.routes.post(this.onePostController.ONE_POST_ROUTE, this.onePostController.readOnePost);
+    this.routes.post(this.profileController.PROFILE_ROUTE, this.profileController.createProfileInformation);
+    this.routes.post(this.uploadController.UPLOAD_IMAGE_ROUTE, this.uploadController.uploadImage);
+    this.routes.post(this.profileController.EMAIL_CHECKER_ROUTE, this.profileController.profileUpdateEmailValidator);
     return this.routes;
   }
 
@@ -47,6 +54,8 @@ export class Routes {
     this.routes.put(this.postController.POST_ROUTE, this.postController.updatePost);
     this.routes.put(this.commentController.COMMENT_ROUTE, this.commentController.updateComment);
     this.routes.put(this.notificationController.NOTIIFICATION_ROUTE, this.notificationController.updateNotification);
+    this.routes.put(this.profileController.PROFILE_ROUTE, this.profileController.updateBasicInformation);
+    this.routes.put(this.profileController.CHANGE_PASSWORD_ROUTE, this.profileController.updateRestrictedInformation);
     return this.routes;
   }
 
