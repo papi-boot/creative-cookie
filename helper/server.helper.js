@@ -12,6 +12,7 @@ import { Sequelize } from "sequelize";
 import { corsOptions } from "../config/cors.option";
 import { SocketListener } from "../middleware/socket.listener";
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
+import { ActiveStatusController } from "../controller/active-status/active.status.controller";
 let dbOption = {
   connectionString: "",
   connectionOption: {},
@@ -49,12 +50,14 @@ const sessionConfig = {
   },
   proxy: true,
 };
+export let socketID = "";
 export class ServerHelper {
   app = express();
   httpServer = createServer(this.app);
   io = new Server(this.httpServer, { cors: corsOptions });
   SECRET_KEY = process.env.SECRET_KEY;
   sl = new SocketListener();
+  activeStatusController = new ActiveStatusController();
 
   startMiddleWare() {
     this.app.use(express.json({ limit: "50mb" }));
@@ -73,8 +76,10 @@ export class ServerHelper {
     this.app.use(passport.session());
     this.io.on("connection", (socket) => {
       if (socket.connected) {
-        console.log("\x1b[32m", "A user connected");
+        socketID = socket.id;
+        console.log(`A user connected ${socketID}`);
         this.sl.socketListen("pre connect", socket, this.io);
+        this.sl.socketListen("user connected", socket, this.io);
         this.sl.socketListen("new post", socket, this.io);
         this.sl.socketListen("edit post", socket, this.io);
         this.sl.socketListen("delete post", socket, this.io);
@@ -82,10 +87,14 @@ export class ServerHelper {
         this.sl.socketListen("add comment", socket, this.io);
         this.sl.socketListen("edit comment", socket, this.io);
         this.sl.socketListen("delete comment", socket, this.io);
+        this.sl.socketListen("user login", socket, this.io);
+        this.sl.socketListen("user logout", socket, this.io);
       }
-      socket.on("disconnect", () => {
-        console.log("\x1b[31m", "A user disconnected");
+      socket.on("disconnect", async () => {
+        console.log(`A user disconnected ${socket.id}`);
         this.io.emit("connect again", "Connect Again");
+        await this.activeStatusController.updateUserStatusOffline(socket.id);
+        this.io.emit("user disconnected", "load");
       });
     });
   }
