@@ -38,7 +38,7 @@ export class RegisterController {
       if (!password) {
         return res.status(401).json({ message: "Password is required.", success: false });
       }
-      if (password.length <= 6) {
+      if (password.length < 6) {
         return res.status(401).json({
           message: "Password should be atleast 6 characters long.",
           success: false,
