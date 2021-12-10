@@ -1,5 +1,5 @@
 "use strict";
-const { DataTypes } = require("sequelize");
+const { DataTypes, QueryTypes } = require("sequelize");
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable("user_status", {
@@ -20,6 +20,14 @@ module.exports = {
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
+      },
+      status_is_active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
+      status_socket_id: {
+        type: DataTypes.STRING(200),
+        allowNull: false,
       },
       status_created_at: {
         allowNull: false,

@@ -52,20 +52,20 @@ export class PostController {
           }
         );
         const results: Array<PostModel> = await databaseHelper.db.query(
-          "SELECT * FROM posts INNER JOIN users ON posts.post_created_by = users.user_id LEFT JOIN profile_informations ON users.user_id = profile_informations.prof_info_user_ref ORDER BY post_created_at DESC LIMIT $1",
+          "SELECT * FROM posts INNER JOIN users ON posts.post_created_by = users.user_id LEFT JOIN profile_informations ON users.user_id = profile_informations.prof_info_user_ref LEFT JOIN user_status ON users.user_id = user_status.status_user_ref ORDER BY post_created_at DESC LIMIT $1",
           {
             type: QueryTypes.SELECT,
             bind: [postLimit],
           }
         );
         const getPostLike: Array<PostLikeRecord> = await databaseHelper.db.query(
-          "SELECT * FROM post_like_records INNER JOIN users ON post_like_records.plr_user_ref = users.user_id INNER JOIN posts ON post_like_records.plr_post_ref = posts.post_id LEFT JOIN profile_informations ON users.user_id = profile_informations.prof_info_user_ref ORDER BY plr_created_at DESC",
+          "SELECT * FROM post_like_records INNER JOIN users ON post_like_records.plr_user_ref = users.user_id INNER JOIN posts ON post_like_records.plr_post_ref = posts.post_id LEFT JOIN profile_informations ON users.user_id = profile_informations.prof_info_user_ref LEFT JOIN user_status ON users.user_id = user_status.status_user_ref ORDER BY plr_created_at DESC",
           {
             type: QueryTypes.SELECT,
           }
         );
         const getCommentPost: Array<CommentModel> = await databaseHelper.db.query(
-          "SELECT * FROM comments INNER JOIN users ON comments.comment_user_ref = users.user_id INNER JOIN posts ON comments.comment_post_ref = posts.post_id LEFT JOIN profile_informations ON users.user_id = profile_informations.prof_info_user_ref ORDER BY comment_created_at DESC",
+          "SELECT * FROM comments INNER JOIN users ON comments.comment_user_ref = users.user_id INNER JOIN posts ON comments.comment_post_ref = posts.post_id LEFT JOIN profile_informations ON users.user_id = profile_informations.prof_info_user_ref LEFT JOIN user_status ON users.user_id = user_status.status_user_ref ORDER BY comment_created_at DESC",
           {
             type: QueryTypes.SELECT,
           }
